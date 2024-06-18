@@ -2,38 +2,20 @@
 const http = require('http');
 const countStudents = require('./3-read_file_async');
 
-const app = http.createServer((req, res) => {
-  const { url } = req;
-  if (url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello Holberton School!');
-  } else if (url === '/students') {
-    const path = './database.csv'; // assume database.csv is in the same directory
-    countStudents(path)
-      .then((result) => {
-        let output = `This is the list of our students\nNumber of students: ${result.totalStudents}\n`;
-        for (const field in result.students) {
-          if (Object.prototype.hasOwnProperty.call(result.students, field)) {
-            const count = result.students[field].length;
-            const list = result.students[field].join(', ');
-            output += `Number of students in ${field}: ${count}. List: ${list}\n`;
-          }
-        }
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end(output.trim());
-      })
-      .catch((error) => {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end(error.message);
-      });
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found');
+const app = http.createServer(async (req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  if (req.url === '/') res.write('Hello Holberton School!');
+  if (req.url === '/students') {
+    res.write('This is the list of our students\n');
+    try {
+      const data = await countStudents(process.argv[2]);
+      res.end(`${data.join('\n')}`);
+    } catch (error) {
+      res.end(error.message);
+    }
   }
+  res.end();
 });
-
-app.listen(1245, () => {
-  console.log('Server listening on port 1245');
-});
-
+app.listen(1245);
 module.exports = app;
