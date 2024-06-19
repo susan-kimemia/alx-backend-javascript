@@ -1,11 +1,9 @@
-// a function named calculateNumber. It should accepts
-// two arguments (number) a and b
-// The function should round a and b and return the sum of it
-
-function calculateNumber(type, a, b) {
+//
+// utils.js
+const Utils = {
+  calculateNumber(type, a, b) {
     const A = Math.round(a);
     const B = Math.round(b);
-  
     if (type === 'SUM') {
       return A + B;
     }
@@ -18,7 +16,7 @@ function calculateNumber(type, a, b) {
       }
       return A / B;
     }
-  }
-  
-  module.exports = calculateNumber;
-  
+  },
+};
+
+module.exports = Utils;

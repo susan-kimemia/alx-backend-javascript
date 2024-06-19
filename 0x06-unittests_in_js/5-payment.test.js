@@ -1,29 +1,23 @@
-const sinon = require('sinon');
-const { expect } = require('chai');
-const sendPaymentRequestToApi = require('./5-payment');
+const {describe, it} = require("mocha");
+const sinon = require("sinon");
+const sendPaymentRequestToApi = require("./5-payment");
+const expect = require("chai").expect;
 
-describe('sendPaymentRequestToApi', () => {
-  let bigBrother;
+describe("sendPaymentRequestToApi", function() {
+    beforeEach("Set up spy to use for each test", function() {
+        sinon.spy(console, "log");
+    });
+    afterEach("restore spy after each test", function() {
+        console.log.restore();
+    });
+    it("check that console.log is called with the right arg", function() {
+        sendPaymentRequestToApi(100, 20);
 
-  beforeEach(() => {
-    if (!bigBrother) {
-      bigBrother = sinon.spy(console);
-    }
-  });
+        expect(console.log.withArgs("The total is: 120").calledOnce).to.be.true;
+    });
+    it("check that console.log is called with the right arg", function() {
+        sendPaymentRequestToApi(10, 10);
 
-  afterEach(() => {
-    bigBrother.log.resetHistory();
-  });
-
-  it('sendPaymentRequestToApi(100, 20) logs "The total is: 120" to the console', () => {
-    sendPaymentRequestToApi(100, 20);
-    expect(bigBrother.log.calledWith('The total is: 120')).to.be.true;
-    expect(bigBrother.log.calledOnce).to.be.true;
-  });
-
-  it('sendPaymentRequestToApi(10, 10) logs "The total is: 20" to the console', () => {
-    sendPaymentRequestToApi(10, 10);
-    expect(bigBrother.log.calledWith('The total is: 20')).to.be.true;
-    expect(bigBrother.log.calledOnce).to.be.true;
-  });
+        expect(console.log.withArgs("The total is: 20").calledOnce).to.be.true;
+    });
 });
